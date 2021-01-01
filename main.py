@@ -8,7 +8,7 @@ from keep_alive import keep_alive
 
 client = discord.Client()
 
-sad_words = ["sad", "Sad" , "depressed", "unhappy", "Angry", "angry", "miserable", "depressing"]
+sad_words = ["sad", "depressed", "unhappy", "angry", "miserable", "depressing"]
 
 starter_encouragements = [
   "Cheer up!",
@@ -48,6 +48,8 @@ async def on_message(message):
   if message.author == client.user:
     return
 
+  #msg = message.content
+  message.content = message.content.lower()
   msg = message.content
 
   if msg.startswith('$inspire'):
