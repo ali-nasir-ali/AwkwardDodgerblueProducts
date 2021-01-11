@@ -37,8 +37,8 @@ colors = {
 
 class Embed(commands.Cog):
 
-    def __init__(self, client):
-        self.client = client
+    def __init__(self, bot):
+        self.bot = bot
 
     @commands.command(
         name='embed',
@@ -46,7 +46,7 @@ class Embed(commands.Cog):
     )
     async def embed_command(self, ctx):
 
-        # Define a check function that validates the message received by the client
+        # Define a check function that validates the message received by the bot
         def check(ms):
             # Look for the message sent in the same channel where the command was used
             # As well as by the user who used the command.
@@ -56,13 +56,13 @@ class Embed(commands.Cog):
         await ctx.send(content='What would you like the title to be?')
 
         # Wait for a response and get the title
-        msg = await self.client.wait_for('message', check=check)
+        msg = await self.bot.wait_for('message', check=check)
         title = msg.content
         # Set the title
 
         # Next, ask for the content
         await ctx.send(content='What would you like the Description to be?')
-        msg = await self.client.wait_for('message', check=check)
+        msg = await self.bot.wait_for('message', check=check)
         desc = msg.content
 
         # Finally make the embed and send it
@@ -77,8 +77,8 @@ class Embed(commands.Cog):
             description=desc,
             color=random.choice(color_list)
         )
-        # Also set the thumbnail to be the client's pfp
-        embed.set_thumbnail(url=self.client.user.avatar_url)
+        # Also set the thumbnail to be the bot's pfp
+        embed.set_thumbnail(url=self.bot.user.avatar_url)
 
         # Also set the embed author to the command user
         embed.set_author(
@@ -114,23 +114,22 @@ class Embed(commands.Cog):
             title='Help',
             color=random.choice(color_list)
         )
-        help_embed.set_thumbnail(url=self.client.user.avatar_url)
+        help_embed.set_thumbnail(url=self.bot.user.avatar_url)
         help_embed.set_footer(
             text=f'Requested by {ctx.message.author.name}',
-            icon_url=self.client.user.avatar_url
+            icon_url=self.bot.user.avatar_url
         )
-        
-        
-        # Get a list of all cogs
-        cogs = [c for c in self.client.cogs.keys()]
 
+        # Get a list of all cogs
+        cogs = [c for c in self.bot.cogs.keys()]
+        print(cogs)
         # If cog is not specified by the user, we list all cogs and commands
 
         if cog == 'all':
             for cog in cogs:
                 # Get a list of all commands under each cog
 
-                cog_commands = self.client.get_cog(cog).get_commands()
+                cog_commands = self.bot.get_cog(cog).get_commands()
                 commands_list = ''
                 for comm in cog_commands:
                     commands_list += f'**{comm.name}** - *{comm.description}*\n'
@@ -157,7 +156,7 @@ class Embed(commands.Cog):
             if cog.lower() in lower_cogs:
 
                 # Get a list of all commands in the specified cog
-                commands_list = self.client.get_cog(cogs[ lower_cogs.index(cog.lower()) ]).get_commands()
+                commands_list = self.bot.get_cog(cogs[ lower_cogs.index(cog.lower()) ]).get_commands()
                 help_text=''
 
                 # Add details of each command to the help text
@@ -179,7 +178,7 @@ class Embed(commands.Cog):
                         help_text += '\n'
 
                     # Finally the format
-                    help_text += f'Format: `@{self.client.user.name}#{self.client.user.discriminator}' \
+                    help_text += f'Format: `@{self.bot.user.name}#{self.bot.user.discriminator}' \
                         f' {command.name} {command.usage if command.usage is not None else ""}`\n\n\n\n'
 
                 help_embed.description = help_text
@@ -193,7 +192,7 @@ class Embed(commands.Cog):
         return
 
 
-def setup(client):
-    client.add_cog(Embed(client))
-    # Adds the Basic commands to the client
+def setup(bot):
+    bot.add_cog(Embed(bot))
+    # Adds the Basic commands to the bot
     # Note: The "setup" function has to be there in every cog file

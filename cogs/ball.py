@@ -48,7 +48,7 @@ class BALL(commands.Cog):
              "Don't count on it.","My reply is no.","My sources say no.",
              "Outlook not so good.","Very doubtful.",'yes','no','maybe'
                  ]
-             await ctx.send(f'Question: {prefix_used}\nAnswer: {random.choice      (responses)}')
+             await ctx.send(f'Question: {alias_used}\nAnswer: {random.choice      (responses)}')
              pass
 
         return
